@@ -105,9 +105,11 @@
       become: no
     - name: update bash_profile
       copy: src=bash_profile.custom dest=/home/vagrant/.bash_profile backup=yes
+      shell: /bin/bash -lc "source ~/.bash_profile"
       become: no
     - name: update vimrc
       copy: src=vimrc dest=/home/vagrant/.vimrc backup=yes
+      shell: /bin/bash -lc "exec $SHELL -l"
       become: no
 
     - name: check ruby-build installed
