@@ -155,7 +155,7 @@
       ignore_errors: yes
       become: no
     - name: install heroku
-      shell: /bin/bash -lc "wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh"
+      shell: /bin/bash -lc "wget -qO- https://toolbelt.heroku.com/install.sh | sh"
       when: heroku_installed.rc != 0
       become: no
 
