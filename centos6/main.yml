@@ -146,7 +146,17 @@
       become: no
     - name: install rails
       shell: /bin/bash -lc "gem update --system && gem install --no-ri --no-rdoc rails && gem install bundler && rbenv rehash"
-      when: rails_install.rc != 0
+      when: rails_installed.rc != 0
+      become: no
+
+    - name: check heroku installed
+      shell: /bin/bash -lc "heroku --version"
+      register: heroku_installed
+      ignore_errors: yes
+      become: no
+    - name: install heroku
+      shell: /bin/bash -lc "wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh"
+      when: heroku_installed.rc != 0
       become: no
 
     - name: check pyenv installed
