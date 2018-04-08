@@ -106,6 +106,9 @@
     - name: update bash_profile
       copy: src=bash_profile.custom dest=/home/vagrant/.bash_profile backup=yes
       become: no
+    - name: update vimrc
+      copy: src=vimrc dest=/home/vagrant/.vimrc backup=yes
+      become: no
 
     - name: check ruby-build installed
       command: test -x /home/vagrant/.rbenv/plugins/ruby-build
