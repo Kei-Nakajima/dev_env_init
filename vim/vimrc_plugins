@@ -1,0 +1,21 @@
+" --------------------
+" Ruby , Ruby on Rails
+" --------------------
+" alpaca_tags　　　ctagsの非同期生成
+" neosnippet　　　Rails/sinatra/rspec等の補完
+" swtich.vim　　　　.present?:.brank?など対応するキーワードを切り替える
+" rubocop　　　　文法エラー、スタイルチェック
+" vim-rails　　　　Railsプロジェクト用プラグイン
+" unite-rails　　　　Railsプロジェクト用Unite-source
+" vim-endwise　　　if...endなど対応するキーワードの自動補完
+" ruby-matchit　　 %を拡張して、def...end等のキーワードを移動出来るようにする。
+" vim-ref　　　　　Ruby/Gemsのリファレンスを引く
+
+:AlpacaTagsUpdate
+" Git配下のtagsを生成します。
+:AlpacaTagsBundle
+" Gemfileからgemのtagsを生成します。
+:AlpacaTagsSet
+" 生成したtagsを読み込みます。
+:Unite tags
+" uniteを使ってtagを操作します
