@@ -93,6 +93,7 @@
         - libyaml-devel
         - libffi-devel
         - bison
+        - rubygems
 
     - name: check rbenv installed
       command: test -x /home/vagrant/.rbenv
