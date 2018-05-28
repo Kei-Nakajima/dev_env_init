@@ -1,6 +1,5 @@
 ---
 - hosts: vagrant
-  connection: local
   become: yes
   vars:
     - ruby_version: 2.5.1
