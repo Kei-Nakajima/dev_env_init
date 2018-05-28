@@ -96,20 +96,25 @@
         - rubygems
 
     - name: check rbenv installed
-      command: test -x /home/vagrant/.rbenv
+      command: test -x /usr/local/src/rbenv
       register: rbenv_present
       ignore_errors: yes
       become: no
     - name: git clone rbenv
-      git: repo=https://github.com/sstephenson/rbenv.git dest=/home/vagrant/.rbenv
+      git: repo=https://github.com/sstephenson/rbenv.git dest=/usr/local/src/rbenv
       when: rbenv_present.rc != 0
-      become: no
+      become: yes
     - name: update bash_profile
       copy: src=bash_profile.custom dest=/home/vagrant/.bash_profile backup=yes
       become: no
     - name: activate bash_profile
       shell: /bin/bash -lc "source ~/.bash_profile"
       become: yes
+    - name: activate rbenv.sh
+      shell: /bin/bash -lc "echo 'export RBENV_ROOT="/usr/local/src/rbenv"' >> /etc/profile.d/rbenv.sh && echo 'export PATH="${RBENV_ROOT}/bin:${PATH}"' >> /etc/profile.d/rbenv.sh"
+      become: yes
+    - name: activate rbenv.sh 2
+      shell: /bin/bash -lc "echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh && source /etc/profile.d/rbenv.sh"
     - name: update vimrc
       copy: src=vimrc dest=/home/vagrant/.vimrc backup=yes
       become: no
@@ -118,12 +123,12 @@
       become: yes
 
     - name: check ruby-build installed
-      command: test -x /home/vagrant/.rbenv/plugins/ruby-build
+      command: test -x /usr/local/src/rbenv/plugins/ruby-build
       register: rbuild_present
       ignore_errors: yes
       become: no
     - name: git clone ruby-build
-      git: repo=https://github.com/sstephenson/ruby-build.git dest=/home/vagrant/.rbenv/plugins/ruby-build
+      git: repo=https://github.com/sstephenson/ruby-build.git dest=/usr/local/src/rbenv/plugins/ruby-build
       when: rbuild_present.rc != 0
       become: no
 
@@ -131,7 +136,7 @@
       command: git pull --rebase chdir=/home/vagrant/.rbenv
       become: yes
     - name: update ruby-build
-      command: git pull --rebase chdir=/home/vagrant/.rbenv/plugins/ruby-build
+      command: git pull --rebase chdir=/usr/local/src/rbenv/plugins/ruby-build
       become: yes
 
     - name: check ruby installed
