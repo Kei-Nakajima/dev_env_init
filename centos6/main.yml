@@ -225,9 +225,13 @@
         - unzip
       shell: /bin/bash -lc "git clone https://github.com/neovim/neovim && cd neovim/ && make && make install && mkdir -p ~/.config ** ln -s ~/.vim ~/.config/nvim && ln -s ~/.vimrc ~/.config/nvim/init.vim"
       copy: src=lazy.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
+      become: no
+
+    - name: neovim2
       copy: src=plugins.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
       shell: /bin/bash -lc "source ~/.bash_profile"
       become: no
+
 
       
 
