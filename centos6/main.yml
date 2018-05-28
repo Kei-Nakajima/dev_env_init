@@ -240,13 +240,13 @@
     #     - unzip
     #   become: yes
     - name: git neovim
-      git: repo=https://github.com/neovim/neovim dest=/home/vagrant/
+      git: repo=https://github.com/neovim/neovim dest=/home/vagrant/neovim
       become: no
     - name: make neovim
-      shell: /bin/bash -lc "cd /home/vagrant/neovim/ && make"
+      shell: /bin/bash -lc "cd /home/vagrant/neovim && make"
       become: yes
     - name: install neovim
-      shell: /bin/bash -lc "cd /home/vagrant/neovim/ && make install"
+      shell: /bin/bash -lc "cd /home/vagrant/neovim && make install"
       become: yes
     - name: config neovim
       shell: /bin/bash -lc "mkdir -p ~/.config"
