@@ -239,9 +239,9 @@
     #     - pkgconfig
     #     - unzip
     #   become: yes
-    - name: git neovim
-      git: repo=https://github.com/neovim/neovim dest=/home/vagrant/neovim
-      become: no
+    # - name: git neovim
+    #   git: repo=https://github.com/neovim/neovim dest=/home/vagrant/neovim
+    #   become: no
     - name: make neovim
       shell: /bin/bash -lc "cd /home/vagrant/neovim && make"
       become: yes
@@ -250,6 +250,9 @@
       become: yes
     - name: config neovim
       shell: /bin/bash -lc "mkdir -p ~/.config"
+      become: yes
+    - name: config neovim0.5
+      shell: /bin/bash -lc "mkdir -p ~/.vim"
       become: yes
     - name: config neovim2
       shell: /bin/bash -lc "ln -s ~/.vim ~/.config/nvim"
