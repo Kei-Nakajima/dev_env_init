@@ -146,15 +146,33 @@
     #   when: rails_installed.rc != 0
     #   become: yes
 
-    - name: check heroku installed
-      shell: /bin/bash -lc "heroku --version"
-      register: heroku_installed
-      ignore_errors: yes
-      become: no
-    - name: install heroku
-      shell: /bin/bash -lc "wget https://cli-assets.heroku.com/heroku-cli/channels/stable/heroku-cli-linux-x64.tar.gz -O heroku.tar.gz && mkdir heroku && tar -xvzf heroku.tar.gz -C heroku --strip-components 1 && mkdir -p /usr/local/lib /usr/local/bin && mv heroku /usr/local/lib/heroku && ln -s /usr/local/lib/heroku/bin/heroku /usr/local/bin/heroku $$ rm -rf heroku.tar.gz"
-      when: heroku_installed.rc != 0
-      become: yes
+    # - name: check heroku installed
+    #   shell: /bin/bash -lc "heroku --version"
+    #   register: heroku_installed
+    #   ignore_errors: yes
+    #   become: no
+    # - name: download heroku
+    #   shell: /bin/bash -lc "wget https://cli-assets.heroku.com/heroku-cli/channels/stable/heroku-cli-linux-x64.tar.gz -O heroku.tar.gz"
+    #   when: heroku_installed.rc != 0
+    #   become: yes
+    # - name: install heroku
+    #   shell: /bin/bash -lc "mkdir heroku"
+    #   become: yes
+    # - name: install heroku2
+    #   shell: /bin/bash -lc "tar -xvzf heroku.tar.gz -C heroku --strip-components 1"
+    #   become: yes
+    # - name: install heroku3
+    #   shell: /bin/bash -lc "mkdir -p /usr/local/lib /usr/local/bin"
+    #   become: yes
+    # - name: install heroku4
+    #   shell: /bin/bash -lc "mv heroku /usr/local/lib/heroku"
+    #   become: yes
+    # - name: install heroku5
+    #   shell: /bin/bash -lc "ln -s /usr/local/lib/heroku/bin/heroku /usr/local/bin/heroku"
+    #   become: yes
+    # - name: install heroku6
+    #   shell: /bin/bash -lc "rm -rf heroku.tar.gz"
+    #   become: yes
 
     - name: check pyenv installed
       command: test -x /home/vagrant/.pyenv
