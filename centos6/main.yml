@@ -109,10 +109,10 @@
       copy: src=bash_profile.custom dest=/home/vagrant/.bash_profile backup=yes
       shell: /bin/bash -lc "source ~/.bash_profile"
       become: no
-    # - name: update vimrc
-    #   copy: src=vimrc dest=/home/vagrant/.vimrc backup=yes
-    #   shell: /bin/bash -lc "exec $SHELL -l"
-    #   become: no
+    - name: update vimrc
+      copy: src=vimrc dest=/home/vagrant/.vimrc backup=yes
+      shell: /bin/bash -lc "exec $SHELL -l"
+      become: no
 
     - name: check ruby-build installed
       command: test -x /home/vagrant/.rbenv/plugins/ruby-build
@@ -213,7 +213,7 @@
       yum: name=npm state=latest
       when: node_installed.rc != 0
 
-    - name: neovim
+    - name: install neovim
       yum: name={{items}} state=latest
       with_items:
         - libtool
@@ -225,10 +225,12 @@
         - make
         - pkgconfig
         - unzip
-      shell: /bin/bash -lc "git clone https://github.com/neovim/neovim && cd neovim/ && make && make install && mkdir -p ~/.config ** ln -s ~/.vim ~/.config/nvim && ln -s ~/.vimrc ~/.config/nvim/init.vim"
+      shell: /bin/bash -lc "git clone https://github.com/neovim/neovim && cd neovim/ && make && make install"
+      become: no
+    - name: config neovim
+      shell: /bin/bash -lc "mkdir -p ~/.config ** ln -s ~/.vim ~/.config/nvim && ln -s ~/.vimrc ~/.config/nvim/init.vim"
       copy: src=lazy.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
       become: no
-
     - name: activate neovim
       copy: src=plugins.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
       shell: /bin/bash -lc "source ~/.bash_profile"
