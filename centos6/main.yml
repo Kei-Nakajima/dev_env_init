@@ -111,10 +111,10 @@
       shell: /bin/bash -lc "source ~/.bash_profile"
       become: yes
     - name: activate rbenv.sh
-      shell: /bin/bash -lc "echo 'export RBENV_ROOT="/usr/local/src/rbenv"' >> /etc/profile.d/rbenv.sh && echo 'export PATH="${RBENV_ROOT}/bin:${PATH}"' >> /etc/profile.d/rbenv.sh"
+      shell: /bin/bash -lc echo 'export RBENV_ROOT="/usr/local/src/rbenv"' >> /etc/profile.d/rbenv.sh && echo 'export PATH="${RBENV_ROOT}/bin:${PATH}"' >> /etc/profile.d/rbenv.sh
       become: yes
     - name: activate rbenv.sh 2
-      shell: /bin/bash -lc "echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh && source /etc/profile.d/rbenv.sh"
+      shell: /bin/bash -lc echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh && source /etc/profile.d/rbenv.sh
     - name: update vimrc
       copy: src=vimrc dest=/home/vagrant/.vimrc backup=yes
       become: no
