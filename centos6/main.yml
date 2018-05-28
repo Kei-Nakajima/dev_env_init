@@ -133,16 +133,15 @@
       command: git pull --rebase chdir=/home/vagrant/.rbenv/plugins/ruby-build
       become: yes
 
-    - name: activate bash_profile again
-      shell: /bin/bash -lc "source ~/.bash_profile"
-      become: yes
     - name: check ruby installed
-      shell: /bin/bash -lc "rbenv versions | grep {{ruby_version}}"
+      # shell: /bin/bash -lc "rbenv versions | grep {{ruby_version}}"
+      shell: sudo -iu rbenv install {{ ruby_version }}
       register: ruby_installed
       ignore_errors: yes
       become: yes
     - name: install ruby
-      shell: /bin/bash -lc "rbenv install {{ruby_version}} && rbenv rehash && rbenv global {{ruby_version}}"
+      # shell: /bin/bash -lc "rbenv install {{ruby_version}} && rbenv rehash && rbenv global {{ruby_version}}"
+      shell: sudo -iu rbenv install {{ruby_version}} && rbenv rehash && rbenv global {{ruby_version}}
       when: ruby_installed.rc != 0
       become: yes
 
