@@ -130,7 +130,7 @@
     - name: git clone ruby-build
       git: repo=https://github.com/sstephenson/ruby-build.git dest=/usr/local/src/rbenv/plugins/ruby-build
       when: rbuild_present.rc != 0
-      become: no
+      become: yes
 
     - name: update rbenv
       command: git pull --rebase chdir=/home/vagrant/.rbenv
