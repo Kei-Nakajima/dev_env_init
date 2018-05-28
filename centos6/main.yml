@@ -174,57 +174,57 @@
     #   shell: /bin/bash -lc "rm -rf heroku.tar.gz"
     #   become: yes
 
-    - name: check pyenv installed
-      command: test -x /home/vagrant/.pyenv
-      register: pyenv_present
-      ignore_errors: yes
-      become: no
-    - name: git clone pyenv
-      git: repo=https://github.com/yyuu/pyenv.git dest=/home/vagrant/.pyenv
-      when: pyenv_present.rc != 0
-      become: no
+    # - name: check pyenv installed
+    #   command: test -x /home/vagrant/.pyenv
+    #   register: pyenv_present
+    #   ignore_errors: yes
+    #   become: no
+    # - name: git clone pyenv
+    #   git: repo=https://github.com/yyuu/pyenv.git dest=/home/vagrant/.pyenv
+    #   when: pyenv_present.rc != 0
+    #   become: no
 
-    - name: check pyvirtual installed
-      command: test -x /home/vagrant/.pyenv/plugins/pyenv-virtualenv
-      register: pyvirtual_present
-      ignore_errors: yes
-      become: no
-    - name: git clone pyenv-virtual
-      git: repo=https://github.com/yyuu/pyenv-virtualenv.git dest=/home/vagrant/.pyenv/plugins/pyenv-virtualenv
-      when: pyvirtual_present != 0
-      become: no
+    # - name: check pyvirtual installed
+    #   command: test -x /home/vagrant/.pyenv/plugins/pyenv-virtualenv
+    #   register: pyvirtual_present
+    #   ignore_errors: yes
+    #   become: no
+    # - name: git clone pyenv-virtual
+    #   git: repo=https://github.com/yyuu/pyenv-virtualenv.git dest=/home/vagrant/.pyenv/plugins/pyenv-virtualenv
+    #   when: pyvirtual_present != 0
+    #   become: no
 
-    - name: update pyenv
-      command: git pull --rebase chdir=/home/vagrant/.pyenv
-      become: no
-    - name: update pyenv-virtualenv
-      command: git pull --rebase chdir=/home/vagrant/.pyenv/plugins/pyenv-virtualenv
-      become: no
+    # - name: update pyenv
+    #   command: git pull --rebase chdir=/home/vagrant/.pyenv
+    #   become: no
+    # - name: update pyenv-virtualenv
+    #   command: git pull --rebase chdir=/home/vagrant/.pyenv/plugins/pyenv-virtualenv
+    #   become: no
 
-    - name: check python installed
-      shell: /bin/bash -lc "pyenv versions | grep {{python_version}}"
-      register: python_installed
-      ignore_errors: yes
-      become: no
-    - name: install python
-      shell: /bin/bash -lc "pyenv install {{python_version}} && pyenv rehash && pyenv global {{python_version}}"
-      when: python_installed.rc != 0
-      become: no
+    # - name: check python installed
+    #   shell: /bin/bash -lc "pyenv versions | grep {{python_version}}"
+    #   register: python_installed
+    #   ignore_errors: yes
+    #   become: no
+    # - name: install python
+    #   shell: /bin/bash -lc "pyenv install {{python_version}} && pyenv rehash && pyenv global {{python_version}}"
+    #   when: python_installed.rc != 0
+    #   become: no
 
-    - name: check node js installed
-      shell: /bin/bash -lc "node -v"
-      register: node_installed
-      ignore_errors: yes
-      become: no
-    - name: install node script
-      shell: /bin/bash -lc "curl -sL https://rpm.nodesource.com/setup | bash -"
-      when: node_installed.rc != 0
-    - name: install nodejs
-      yum: name=nodejs state=latest
-      when: node_installed.rc != 0
-    - name: install npm
-      yum: name=npm state=latest
-      when: node_installed.rc != 0
+    # - name: check node js installed
+    #   shell: /bin/bash -lc "node -v"
+    #   register: node_installed
+    #   ignore_errors: yes
+    #   become: no
+    # - name: install node script
+    #   shell: /bin/bash -lc "curl -sL https://rpm.nodesource.com/setup | bash -"
+    #   when: node_installed.rc != 0
+    # - name: install nodejs
+    #   yum: name=nodejs state=latest
+    #   when: node_installed.rc != 0
+    # - name: install npm
+    #   yum: name=npm state=latest
+    #   when: node_installed.rc != 0
 
     - name: ready install neovim
       yum: name={{items}} state=latest
@@ -238,19 +238,31 @@
         - make
         - pkgconfig
         - unzip
+      become: yes
+    - name: git neovim
+      shell: /bin/bash -lc "git clone https://github.com/neovim/neovim && cd neovim/ "
       become: no
+    - name: make neovim
+      shell: /bin/bash -lc "make"
+      become: yes
     - name: install neovim
-      shell: /bin/bash -lc "git clone https://github.com/neovim/neovim && cd neovim/ && make && make install"
-      become: no
+      shell: /bin/bash -lc "make install"
+      become: yes
     - name: config neovim
-      shell: /bin/bash -lc "mkdir -p ~/.config ** ln -s ~/.vim ~/.config/nvim && ln -s ~/.vimrc ~/.config/nvim/init.vim"
-      become: no
+      shell: /bin/bash -lc "mkdir -p ~/.config"
+      become: yes
+    - name: config neovim2
+      shell: /bin/bash -lc "ln -s ~/.vim ~/.config/nvim"
+      become: yes
+    - name: config neovim3
+      shell: /bin/bash -lc "ln -s ~/.vimrc ~/.config/nvim/init.vim"
+      become: yes
     - name: copy neovim settings
       copy: src=lazy.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
-      become: no
+      become: yes
     - name: copy neovim settings
       copy: src=plugins.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
-      become: no
+      become: yes
     - name: activate neovim
       shell: /bin/bash -lc "source ~/.bash_profile"
       become: yes
