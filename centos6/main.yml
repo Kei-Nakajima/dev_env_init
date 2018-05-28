@@ -227,7 +227,7 @@
     #   when: node_installed.rc != 0
 
     - name: ready install neovim
-      yum: name={{items}} state=latest
+      yum: name={{item}} state=latest
       with_items:
         - libtool
         - autoconf
