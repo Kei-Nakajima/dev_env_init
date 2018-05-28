@@ -109,10 +109,12 @@
     - name: activate bash_profile
       shell: /bin/bash -lc "source ~/.bash_profile"
       become: no
-    # - name: update vimrc
-    #   copy: src=vimrc dest=/home/vagrant/.vimrc backup=yes
-    #   shell: /bin/bash -lc "exec $SHELL -l"
-    #   become: no
+    - name: update vimrc
+      copy: src=vimrc dest=/home/vagrant/.vimrc backup=yes
+      become: no
+    - name: activate vimrc
+      shell: /bin/bash -lc "exec $SHELL -l"
+      become: no
 
     - name: check ruby-build installed
       command: test -x /home/vagrant/.rbenv/plugins/ruby-build
@@ -213,28 +215,34 @@
       yum: name=npm state=latest
       when: node_installed.rc != 0
 
-    # - name: install neovim
-    #   yum: name={{items}} state=latest
-    #   with_items:
-    #     - libtool
-    #     - autoconf
-    #     - automake
-    #     - cmake
-    #     - gcc
-    #     - gcc-c++
-    #     - make
-    #     - pkgconfig
-    #     - unzip
-    #   shell: /bin/bash -lc "git clone https://github.com/neovim/neovim && cd neovim/ && make && make install"
-    #   become: no
-    # - name: config neovim
-    #   shell: /bin/bash -lc "mkdir -p ~/.config ** ln -s ~/.vim ~/.config/nvim && ln -s ~/.vimrc ~/.config/nvim/init.vim"
-    #   copy: src=lazy.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
-    #   become: no
-    # - name: activate neovim
-    #   copy: src=plugins.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
-    #   shell: /bin/bash -lc "source ~/.bash_profile"
-    #   become: no
+    - name: ready install neovim
+      yum: name={{items}} state=latest
+      with_items:
+        - libtool
+        - autoconf
+        - automake
+        - cmake
+        - gcc
+        - gcc-c++
+        - make
+        - pkgconfig
+        - unzip
+      become: no
+    - name: install neovim
+      shell: /bin/bash -lc "git clone https://github.com/neovim/neovim && cd neovim/ && make && make install"
+      become: no
+    - name: config neovim
+      shell: /bin/bash -lc "mkdir -p ~/.config ** ln -s ~/.vim ~/.config/nvim && ln -s ~/.vimrc ~/.config/nvim/init.vim"
+      become: no
+    - name: copy neovim settings
+      copy: src=lazy.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
+      become: no
+    - name: copy neovim settings
+      copy: src=plugins.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
+      become: no
+    - name: activate neovim
+      shell: /bin/bash -lc "source ~/.bash_profile"
+      become: no
   
   handlers:
     - name: restart apache
