@@ -154,7 +154,7 @@
     - name: install heroku
       shell: /bin/bash -lc "wget https://cli-assets.heroku.com/heroku-cli/channels/stable/heroku-cli-linux-x64.tar.gz -O heroku.tar.gz && mkdir heroku && tar -xvzf heroku.tar.gz -C heroku --strip-components 1 && mkdir -p /usr/local/lib /usr/local/bin && mv heroku /usr/local/lib/heroku && ln -s /usr/local/lib/heroku/bin/heroku /usr/local/bin/heroku $$ rm -rf heroku.tar.gz"
       when: heroku_installed.rc != 0
-      become: no
+      become: yes
 
     - name: check pyenv installed
       command: test -x /home/vagrant/.pyenv
