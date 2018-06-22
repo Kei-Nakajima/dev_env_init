@@ -232,14 +232,24 @@
       when: node_installed.rc != 0
 
     - name: install vim
-      yum: name={{item}} state=latest
-      with_items:
-        - vim
+      shell: /bin/bash -lc "wget https://copr.fedorainfracloud.org/coprs/mcepl/vim8/repo/epel-7/mcepl-vim8-epel-7.repo -P /etc/yum.repos.d/"
+      become: yes
+    - name: delete old vim
+      shell: /bin/bash -lc "yum remove "vim*""
+      become: yes
+    - name: install latest vim
+      shell: /bin/bash -lc "yum install vim-enhanced"
+      become: yes
     - name: git dein
       shell: /bin/bash -lc "curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh"
     - name: install dein
       shell: /bin/bash -lc "sh ./installer.sh ~/.vim/dein"
 
+    - name: isntall zsh
+      shell: /bin/bash -lc "curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh"
+    - name: add zshrc
+      copy: src=zshrc.custom dest=/home/vagrant/.zshrc
+      become: yes
 
     # - name: ready install neovim
     #   yum: name={{item}} state=latest
