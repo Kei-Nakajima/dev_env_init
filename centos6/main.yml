@@ -5,8 +5,8 @@
     - ruby_version: 2.5.1
     - python_version: 3.6.5
   tasks:
-    - name: disable iptables
-      service: name=iptables state=stopped enabled=no
+    - name: disable firewalld
+      service: name=firewalled state=stopped enabled=no
     - name: install libselinux-python
       yum: name=libselinux-python state=latest
     - name: remove localtime
