@@ -20,8 +20,11 @@
       shell: /bin/bash -lc "localectl set-locale LANG=ja_JP.utf8"
       when: ansible_env.LANG | default('') != 'ja_JP.utf8'
       become: yes
-    - name: install remi repository
-      command: rpm -Uvh --force http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+    - name: Install remi-release-7
+      yum:
+        name: http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+        state: latest
+      when: remi_release_7.stat.exists == false
     - name: install man
       yum: name=man state=latest
     - name: install apache
