@@ -168,13 +168,15 @@
       become: no
     - name: gem update
       shell: /bin/bash -lc "gem update --system"
+      become: no
     - name: install bundler
-      shell: /bin/bash -lc "source ~/.bash_profile && rbenv exec gem install bundler"
+      shell: /bin/bash -lc "rbenv exec gem install bundler"
+      become: no
       ignore_errors: yes
     - name: install rails
       shell: /bin/bash -lc "gem install --no-ri --no-rdoc rails"
       when: rails_installed.rc != 0
-      become: yes
+      become: no
     - name: rails rehash
       shell: /bin/bash -lc "rails rehash"
       ignore_errors: yes
@@ -184,6 +186,8 @@
       register: heroku_installed
       ignore_errors: yes
       become: no
+    - name: install wget
+      yum: name=wget state=latest
     - name: download heroku
       shell: /bin/bash -lc "wget https://cli-assets.heroku.com/heroku-cli/channels/stable/heroku-cli-linux-x64.tar.gz -O heroku.tar.gz"
       when: heroku_installed.rc != 0
