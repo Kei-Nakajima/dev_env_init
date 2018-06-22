@@ -169,7 +169,8 @@
     - name: gem update
       shell: /bin/bash -lc "gem update --system"
     - name: install bundler
-      shell: /bin/bash -lc "rbenv exec gem install bundler"
+      shell: /bin/bash -lc "source ~/.bash_profile && rbenv exec gem install bundler"
+      ignore_errors: yes
     - name: install rails
       shell: /bin/bash -lc "gem install --no-ri --no-rdoc rails"
       when: rails_installed.rc != 0
@@ -237,12 +238,12 @@
       become: yes
 
     - name: check python installed
-      shell: /bin/bash -lc "pyenv versions | grep {{python_version}}"
+      shell: /bin/bash -lc "source ~/.bash_profile && pyenv versions | grep {{python_version}}"
       register: python_installed
       ignore_errors: yes
       become: no
     - name: install python
-      shell: /bin/bash -lc "pyenv install {{python_version}} && pyenv rehash && pyenv global {{python_version}}"
+      shell: /bin/bash -lc "source ~/.bash_profile && pyenv install {{python_version}} && pyenv rehash && pyenv global {{python_version}}"
       when: python_installed.rc != 0
       become: no
 
@@ -261,19 +262,19 @@
       yum: name=npm state=latest
       when: node_installed.rc != 0
 
-    - name: install vim
-      shell: /bin/bash -lc "wget https://copr.fedorainfracloud.org/coprs/mcepl/vim8/repo/epel-7/mcepl-vim8-epel-7.repo -P /etc/yum.repos.d/"
-      become: yes
-    - name: delete old vim
-      shell: /bin/bash -lc "yum remove "vim*""
-      become: yes
-    - name: install latest vim
-      shell: /bin/bash -lc "yum install vim-enhanced"
-      become: yes
-    - name: git dein
-      shell: /bin/bash -lc "curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh"
-    - name: install dein
-      shell: /bin/bash -lc "sh ./installer.sh ~/.vim/dein"
+    # - name: install vim
+    #   shell: /bin/bash -lc "wget https://copr.fedorainfracloud.org/coprs/mcepl/vim8/repo/epel-7/mcepl-vim8-epel-7.repo -P /etc/yum.repos.d/"
+    #   become: yes
+    # - name: delete old vim
+    #   shell: /bin/bash -lc "yum remove "vim*""
+    #   become: yes
+    # - name: install latest vim
+    #   shell: /bin/bash -lc "yum install vim-enhanced"
+    #   become: yes
+    # - name: git dein
+    #   shell: /bin/bash -lc "curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh"
+    # - name: install dein
+    #   shell: /bin/bash -lc "sh ./installer.sh ~/.vim/dein"
 
     - name: isntall zsh
       shell: /bin/bash -lc "curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh"
