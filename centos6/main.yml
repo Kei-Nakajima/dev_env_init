@@ -106,11 +106,13 @@
       become: no
     - name: update bash_profile
       copy: src=bash_profile.custom dest=/home/vagrant/.bash_profile backup=yes
+      become: yes
+    - name: activate bash_profile
       shell: /bin/bash -lc "source ~/.bash_profile"
-      become: no
+      become: yes
     - name: add vimrc
       copy: src=vimrc.custom dest=/home/vagrant/.vimrc
-      become: no
+      become: yes
 
     - name: check ruby-build installed
       command: test -x /home/vagrant/.rbenv/plugins/ruby-build
