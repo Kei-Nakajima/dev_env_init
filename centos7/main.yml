@@ -67,7 +67,9 @@
       stat: path=/etc/yum.repos.d/mysql-community.repo
       register: mysql_community
     - name: install mysql repository
-      command: rpm -Uvh --force http://dev.mysql.com/get/mysql-community-release-el7-8.noarch.rpm
+      yum:
+        name: http://dev.mysql.com/get/mysql-community-release-el7-8.noarch.rpm
+        state: latest
       when: mysql_community.stat.exists == false
     - name: install mysql
       yum: name={{item}} state=present
