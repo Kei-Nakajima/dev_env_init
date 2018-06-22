@@ -157,6 +157,9 @@
       shell: /bin/bash -lc "rbenv install {{ruby_version}} && rbenv rehash && rbenv global {{ruby_version}}"
       when: ruby_installed.rc == 1
       become: no
+    - name: activate bash_profile for rbenv
+      shell: /bin/bash -lc "source ~/.bash_profile"
+      become: yes
 
     - name: check rails installed
       shell: /bin/bash -lc "rails -v"
@@ -229,6 +232,9 @@
     - name: update pyenv-virtualenv
       command: git pull --rebase chdir=/home/vagrant/.pyenv/plugins/pyenv-virtualenv
       become: no
+    - name: activate bash_profile for pyenv
+      shell: /bin/bash -lc "source ~/.bash_profile"
+      become: yes
 
     - name: check python installed
       shell: /bin/bash -lc "pyenv versions | grep {{python_version}}"
