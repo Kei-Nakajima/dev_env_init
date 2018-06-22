@@ -71,6 +71,9 @@
         name: http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
         state: latest
       when: mysql_community.stat.exists == false
+    - name: yum update
+      shell: /bin/bash -lc "yum update"
+      become: yes
     - name: install mysql
       yum: name={{item}} state=present
       with_items:
@@ -160,10 +163,17 @@
       register: rails_installed
       ignore_errors: yes
       become: no
+    - name: gem update
+      shell: /bin/bash -lc "gem update --system"
+    - name: install bundler
+      shell: /bin/bash -lc "rbenv exec gem install bundler"
     - name: install rails
-      shell: /bin/bash -lc "gem update --system && gem install --no-ri --no-rdoc rails && gem install bundler && rbenv rehash"
+      shell: /bin/bash -lc "gem install --no-ri --no-rdoc rails"
       when: rails_installed.rc != 0
       become: yes
+    - name: rails rehash
+      shell: /bin/bash -lc "rails rehash"
+      ignore_errors: yes
 
     - name: check heroku installed
       shell: /bin/bash -lc "heroku --version"
