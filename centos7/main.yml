@@ -68,7 +68,7 @@
       register: mysql_community
     - name: install mysql repository
       yum:
-        name: http://dev.mysql.com/get/mysql-community-release-el7-8.noarch.rpm
+        name: http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
         state: latest
       when: mysql_community.stat.exists == false
     - name: install mysql
