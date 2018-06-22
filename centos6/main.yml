@@ -108,6 +108,9 @@
       copy: src=bash_profile.custom dest=/home/vagrant/.bash_profile backup=yes
       shell: /bin/bash -lc "source ~/.bash_profile"
       become: no
+    - name: add vimrc
+      copy: src=vimrc.custom dest=/home/vagrant/.vimrc
+      become: no
 
     - name: check ruby-build installed
       command: test -x /home/vagrant/.rbenv/plugins/ruby-build
@@ -238,39 +241,40 @@
         - make
         - pkgconfig
         - unzip
-      become: yes
-    - name: git neovim
-      git: repo=https://github.com/neovim/neovim dest=/home/vagrant/neovim
-      become: no
-    - name: make neovim
-      shell: /bin/bash -lc "cd /home/vagrant/neovim && make"
-      become: yes
-    - name: install neovim
-      shell: /bin/bash -lc "cd /home/vagrant/neovim && make install"
-      become: yes
-    - name: config neovim
-      shell: /bin/bash -lc "mkdir -p ~/.config"
-      become: yes
-    - name: config neovim0.5
-      shell: /bin/bash -lc "mkdir -p ~/.vim"
-      become: yes
-    - name: config neovim2
-      shell: /bin/bash -lc "ln -s ~/.vim ~/.config/nvim"
-      become: yes
-    - name: config neovim3
-      shell: /bin/bash -lc "ln -s ~/.vimrc ~/.config/nvim/init.vim"
-      become: yes
-    - name: mkdir
-      shell: /bin/bash -lc "mkdir -p /home/vagrant/.vim/repos/github.com"
-    - name: copy neovim settings
-      copy: src=lazy.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
-      become: yes
-    - name: copy neovim settings
-      copy: src=plugins.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
-      become: yes
-    - name: activate neovim
-      shell: /bin/bash -lc "source ~/.bash_profile"
-      become: yes
+        - vim
+    #   become: yes
+    # - name: git neovim
+    #   git: repo=https://github.com/neovim/neovim dest=/home/vagrant/neovim
+    #   become: no
+    # - name: make neovim
+    #   shell: /bin/bash -lc "cd /home/vagrant/neovim && make"
+    #   become: yes
+    # - name: install neovim
+    #   shell: /bin/bash -lc "cd /home/vagrant/neovim && make install"
+    #   become: yes
+    # - name: config neovim
+    #   shell: /bin/bash -lc "mkdir -p ~/.config"
+    #   become: yes
+    # - name: config neovim0.5
+    #   shell: /bin/bash -lc "mkdir -p ~/.vim"
+    #   become: yes
+    # - name: config neovim2
+    #   shell: /bin/bash -lc "ln -s ~/.vim ~/.config/nvim"
+    #   become: yes
+    # - name: config neovim3
+    #   shell: /bin/bash -lc "ln -s ~/.vimrc ~/.config/nvim/init.vim"
+    #   become: yes
+    # - name: mkdir
+    #   shell: /bin/bash -lc "mkdir -p /home/vagrant/.vim/repos/github.com"
+    # - name: copy neovim settings
+    #   copy: src=lazy.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
+    #   become: yes
+    # - name: copy neovim settings
+    #   copy: src=plugins.toml dest=/home/vagrant/.vim/repos/github.com/Shougo backup=yes
+    #   become: yes
+    # - name: activate neovim
+    #   shell: /bin/bash -lc "source ~/.bash_profile"
+    #   become: yes
   
   handlers:
     - name: restart apache
