@@ -5,8 +5,8 @@
     - ruby_version: 2.5.1
     - python_version: 3.6.5
   tasks:
-    - name: disable iptables
-      service: name=iptables state=stopped enabled=no
+    - name: disable firewalld
+      service: name=firewalld state=stopped enabled=no
     - name: set timezone to Asia/Tokyo
       timezone:
         name: Asia/Tokyo
@@ -20,8 +20,15 @@
       shell: /bin/bash -lc "localectl set-locale LANG=ja_JP.utf8"
       when: ansible_env.LANG | default('') != 'ja_JP.utf8'
       become: yes
-    - name: Install remi-release-6
-      command: rpm -Uvh --force http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+    - name: check remi-release-7
+        stat: path=/etc/yum.repos.d/remi-php70.repo
+        register: remi_release_7
+    - name: Install remi-release-7
+      yum:
+        name: http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+        state: latest
+      when: remi_release_7.stat.exists == false
+      become: yes
     - name: install man
       yum: name=man state=latest
     - name: install apache
