@@ -186,3 +186,14 @@ let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
+
+" Rsense用の設定
+if !exists('g:neocomplcache_omni_patterns')
+    let g:neocomplcache_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+
+"rsenseのインストールフォルダがデフォルトと異なるので設定
+"let g:rsenseHome = expand(/usr/local/bin/rsense)
+"let g:rsenseUseOmniFunc = 1
