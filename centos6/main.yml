@@ -231,19 +231,29 @@
       yum: name=npm state=latest
       when: node_installed.rc != 0
 
-    - name: ready install neovim
+    - name: install vim
       yum: name={{item}} state=latest
       with_items:
-        - libtool
-        - autoconf
-        - automake
-        - cmake
-        - gcc
-        - gcc-c++
-        - make
-        - pkgconfig
-        - unzip
         - vim
+    - name: git dein
+      shell: /bin/bash -lc "curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh"
+    - name: install dein
+      shell: /bin/bash -lc "sh ./installer.sh ~/.vim/dein"
+
+
+    # - name: ready install neovim
+    #   yum: name={{item}} state=latest
+    #   with_items:
+    #     - libtool
+    #     - autoconf
+    #     - automake
+    #     - cmake
+    #     - gcc
+    #     - gcc-c++
+    #     - make
+    #     - pkgconfig
+    #     - unzip
+    #     - vim
     #   become: yes
     # - name: git neovim
     #   git: repo=https://github.com/neovim/neovim dest=/home/vagrant/neovim
