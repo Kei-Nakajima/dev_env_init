@@ -72,8 +72,7 @@
         state: latest
       when: mysql_community.stat.exists == false
     - name: yum update
-      shell: /bin/bash -lc "yum update"
-      become: yes
+      shell: /bin/bash -lc "yum update -y"
     - name: install mysql
       yum: name={{item}} state=present
       with_items:
@@ -266,26 +265,28 @@
       yum: name=npm state=latest
       when: node_installed.rc != 0
 
-    # - name: install vim
-    #   shell: /bin/bash -lc "wget https://copr.fedorainfracloud.org/coprs/mcepl/vim8/repo/epel-7/mcepl-vim8-epel-7.repo -P /etc/yum.repos.d/"
-    #   become: yes
-    # - name: delete old vim
-    #   shell: /bin/bash -lc "yum remove "vim*""
-    #   become: yes
-    # - name: install latest vim
-    #   shell: /bin/bash -lc "yum install vim-enhanced"
-    #   become: yes
-    # - name: git dein
-    #   shell: /bin/bash -lc "curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh"
-    # - name: install dein
-    #   shell: /bin/bash -lc "sh ./installer.sh ~/.vim/dein"
+    - name: add repo of vim
+      shell: /bin/bash -lc "curl -L https://copr.fedorainfracloud.org/coprs/mcepl/vim8/repo/epel-7/mcepl-vim8-epel-7.repo -o /etc/yum.repos.d/mcepl-vim8-epel-7.repo"
+    - name: update old vim
+      shell: /bin/bash -lc "yum update vim* -y""
+    - name: git dein
+      shell: /bin/bash -lc "curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh"
+    - name: install dein
+      shell: /bin/bash -lc "sh ./installer.sh ~/.vim/dein"
 
-    - name: isntall zsh
-      shell: /bin/bash -lc "curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh"
+    - name: install zsh
+      yum: name=zsh state=latest
+    - name: install zplug
+      shell: /bin/bash -lc "curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh -y"
+    - name: activate prezto
+      shell: /bin/bash -lc 'git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"'
+    - name: activate prezto2
+      shell: /bin/bash -lc 'ln -s $HOME/.zplug/repos/sorin-ionescu/prezto $HOME/.zprezto'
+    - name: active prezto3
+      shell: /bin/zsh 'setopt EXTENDED_GLOB && for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do && ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}" && done'
     - name: add zshrc
       copy: src=zshrc.custom dest=/home/vagrant/.zshrc
-      become: yes
-
+      
     # - name: ready install neovim
     #   yum: name={{item}} state=latest
     #   with_items:
