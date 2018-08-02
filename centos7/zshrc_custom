@@ -94,5 +94,11 @@ fi
 # prezto
 zplug "sorin-ionescu/prezto"
 
+# peco
+zplug "peco/peco"
+
 # Then, source plugins and add commands to $PATH
 zplug load --verbose
+
+# auto
+autoload -Uz compinit && compinit

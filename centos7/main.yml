@@ -5,6 +5,7 @@
     - ruby_version: 2.5.1
     - python_version: 3.6.5
   tasks:
+    # base settings
     - name: disable firewalld
       service: name=firewalld state=stopped enabled=no
     - name: set timezone to Asia/Tokyo
@@ -62,7 +63,8 @@
       copy: src=php.ini.custom dest=/etc/php.ini backup=yes
       notify:
         - restart apache
-
+    
+    # isntall mysql
     - name: check mysql repo
       stat: path=/etc/yum.repos.d/mysql-community.repo
       register: mysql_community
@@ -84,6 +86,8 @@
       copy: src=my.cnf.custom dest=/etc/my.cnf backup=yes
     - name: start mysql and enabled
       service: name=mysqld state=started enabled=yes
+
+    # insrtall ruby dependencies
     - name: install ruby dependencies
       yum: name={{item}} enablerepo=remi,epel state=present
       with_items:
@@ -110,7 +114,7 @@
         - libffi-devel
         - bison
         - rubygems
-
+    # install rbenv
     - name: check rbenv installed
       command: test -x /home/vagrant/.rbenv
       register: rbenv_present
@@ -126,10 +130,13 @@
     - name: activate bash_profile
       shell: /bin/bash -lc "source ~/.bash_profile"
       become: yes
+    
+    # modify vim
     - name: add vimrc
       copy: src=vimrc.custom dest=/home/vagrant/.vimrc
       become: yes
-
+    
+    # install ruby
     - name: check ruby-build installed
       command: test -x /home/vagrant/.rbenv/plugins/ruby-build
       register: rbuild_present
@@ -139,7 +146,7 @@
       git: repo=https://github.com/sstephenson/ruby-build.git dest=/home/vagrant/.rbenv/plugins/ruby-build
       when: rbuild_present.rc == 1
       become: no
-
+    
     - name: update rbenv
       command: git pull --rebase chdir=/home/vagrant/.rbenv
       become: no
@@ -159,7 +166,8 @@
     - name: activate bash_profile for rbenv
       shell: /bin/bash -lc "source ~/.bash_profile"
       become: yes
-
+    
+    # install rails
     - name: check rails installed
       shell: /bin/bash -lc "rails -v"
       register: rails_installed
@@ -179,7 +187,8 @@
     - name: rails rehash
       shell: /bin/bash -lc "rails rehash"
       ignore_errors: yes
-
+    
+    # install heroku
     - name: check heroku installed
       shell: /bin/bash -lc "heroku --version"
       register: heroku_installed
@@ -209,7 +218,8 @@
     - name: install heroku6
       shell: /bin/bash -lc "rm -rf heroku.tar.gz"
       become: yes
-
+    
+    # install python
     - name: check pyenv installed
       command: test -x /home/vagrant/.pyenv
       register: pyenv_present
@@ -219,7 +229,7 @@
       git: repo=https://github.com/yyuu/pyenv.git dest=/home/vagrant/.pyenv
       when: pyenv_present.rc != 0
       become: no
-
+    
     - name: check pyvirtual installed
       command: test -x /home/vagrant/.pyenv/plugins/pyenv-virtualenv
       register: pyvirtual_present
@@ -250,6 +260,7 @@
       when: python_installed.rc != 0
       become: no
 
+    # install node js
     - name: check node js installed
       shell: /bin/bash -lc "node -v"
       register: node_installed
@@ -265,27 +276,29 @@
       yum: name=npm state=latest
       when: node_installed.rc != 0
 
-    - name: add repo of vim
-      shell: /bin/bash -lc "curl -L https://copr.fedorainfracloud.org/coprs/mcepl/vim8/repo/epel-7/mcepl-vim8-epel-7.repo -o /etc/yum.repos.d/mcepl-vim8-epel-7.repo"
-    - name: update old vim
-      shell: /bin/bash -lc "yum update vim* -y""
-    - name: git dein
-      shell: /bin/bash -lc "curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh"
-    - name: install dein
-      shell: /bin/bash -lc "sh ./installer.sh ~/.vim/dein"
+    # update vim
+    # - name: add repo of vim
+    #   shell: /bin/bash -lc "curl -L https://copr.fedorainfracloud.org/coprs/mcepl/vim8/repo/epel-7/mcepl-vim8-epel-7.repo -o /etc/yum.repos.d/mcepl-vim8-epel-7.repo"
+    # - name: update old vim
+    #   shell: /bin/bash -lc "yum update vim* -y""
+    # - name: git dein
+    #   shell: /bin/bash -lc "curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh"
+    # - name: install dein
+    #   shell: /bin/bash -lc "sh ./installer.sh ~/.vim/dein"
 
-    - name: install zsh
-      yum: name=zsh state=latest
-    - name: install zplug
-      shell: /bin/bash -lc "curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh -y"
-    - name: activate prezto
-      shell: /bin/bash -lc 'git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"'
-    - name: activate prezto2
-      shell: /bin/bash -lc 'ln -s $HOME/.zplug/repos/sorin-ionescu/prezto $HOME/.zprezto'
-    - name: active prezto3
-      shell: /bin/zsh 'setopt EXTENDED_GLOB && for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do && ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}" && done'
-    - name: add zshrc
-      copy: src=zshrc.custom dest=/home/vagrant/.zshrc
+    # - name: install zsh
+    #   yum: name=zsh state=latest
+    # - name: install zplug
+    #   shell: /bin/bash -lc "curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh -y"
+    # - name: activate prezto
+    #   shell: /bin/bash -lc 'git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"'
+    # - name: activate prezto2
+    #   shell: /bin/bash -lc 'ln -s $HOME/.zplug/repos/sorin-ionescu/prezto $HOME/.zprezto'
+    # - name: active prezto3
+    #   shell: /bin/zsh 'setopt EXTENDED_GLOB
+    #   for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do && ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}" && done'
+    # - name: add zshrc
+    #   copy: src=zshrc.custom dest=/home/vagrant/.zshrc
       
     # - name: ready install neovim
     #   yum: name={{item}} state=latest
